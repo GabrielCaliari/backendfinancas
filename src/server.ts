@@ -24,4 +24,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   })
 })
 
-app.listen(3333, () => console.log('Server Online!'))
+const PORT = process.env.PORT || 3333;
+app.listen(PORT, () => console.log(`Server Online on port ${PORT}`));
+
+app.use((req, res, next) => {
+  console.log(`Requisição recebida: ${req.method} ${req.url}`);
+  next();
+});
