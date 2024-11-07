@@ -14,6 +14,10 @@ import { UpdateUserPasswordController } from './controllers/user/UpdateUserPassw
 
 const router = Router();
 
+router.get('/', (req, res) => {
+  res.send('API is running');
+});
+
 router.post('/users', new CreateUserController().handle);
 router.put('/users/:id', isAuthenticated, new UpdateUserController().handle); 
 router.put('/users/:id/password', isAuthenticated, new UpdateUserPasswordController().handle); 
