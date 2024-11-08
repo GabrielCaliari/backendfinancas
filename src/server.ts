@@ -14,15 +14,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(router);
+app.use(router); // Certifique-se de que o router está sendo usado aqui
 
-// Adicione logs específicos para verificar os dados recebidos em rotas importantes
-app.post('/users', (req, res, next) => {
-  console.log('Dados recebidos no cadastro:', req.body);
-  next();
-});
-
+// Middleware de tratamento de erros
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error('Erro:', err.message);
   if (err instanceof Error) {
     return res.status(400).json({
       error: err.message,
