@@ -27,6 +27,6 @@ router.get("/balance", isAuthenticated, new ListUserBalanceController().handle);
 router.post("/receive", isAuthenticated, new CreateReceiveController().handle);
 router.get("/receives", isAuthenticated, new ListReceivesController().handle);
 router.delete("/receives/delete", isAuthenticated, new DeleteReceiveController().handle);
-router.put('/receives/edit/:id', isAuthenticated, new EditReceiveController().handles); 
+router.put('/receives/edit/:id', isAuthenticated, new EditReceiveController().handle); 
 
 export { router };
