@@ -4,10 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "npm run dev",
-    "dev": "ts-node-dev --transpile-only src/server.ts",
-    "build": "tsc"
-  },
+  "start": "node dist/server.js",
+  "dev": "ts-node-dev --transpile-only src/server.ts",
+  "build": "tsc"
+},
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.12",
