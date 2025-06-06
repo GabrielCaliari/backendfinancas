@@ -2,7 +2,7 @@ FROM node:20 AS build
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --force
 COPY . .
 RUN npm run build
 
@@ -11,7 +11,7 @@ FROM node:20
 WORKDIR /app
 COPY --from=build /app ./
 
-RUN npm install --omit=dev
+RUN npm install --omit=dev --force
 
 # Adicione o .env aqui se não copiou antes
 COPY --from=build /app/.env .env
