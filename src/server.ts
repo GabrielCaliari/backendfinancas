@@ -9,7 +9,7 @@ import { AppError } from './errors/AppError';
 // Validação de variáveis obrigatórias ao iniciar
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET || JWT_SECRET.length < 16) {
-  console.error('Erro: JWT_SECRET deve estar definido em variáveis de ambiente com pelo menos 16 caracteres.');
+  console.error('Erro: JWT_SECRET não configurado');
   process.exit(1);
 }
 
