@@ -1,10 +1,10 @@
 import prismaClient from "../../prisma";
+import { ValidationError, NotFoundError } from "../../errors/AppError";
 
 class ListDetailUserService{
   async execute(user_id: string){
-
     if (!user_id) {
-      throw new Error("Invalid user");
+      throw new ValidationError("Usuário inválido");
     }
 
     const user = await prismaClient.user.findFirst({
@@ -22,7 +22,7 @@ class ListDetailUserService{
     })
 
     if(user === null){
-      throw new Error("User not found")
+      throw new NotFoundError("Usuário não encontrado");
     }
 
     return user;

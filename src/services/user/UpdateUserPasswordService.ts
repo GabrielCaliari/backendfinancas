@@ -1,6 +1,7 @@
 // services/user/UpdateUserPasswordService.ts
 import { compare, hash } from 'bcryptjs';
 import prismaClient from '../../prisma';
+import { NotFoundError, ValidationError } from '../../errors/AppError';
 
 interface UserPasswordUpdateRequest {
   id: string;
@@ -15,13 +16,12 @@ class UpdateUserPasswordService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundError('Usuário não encontrado');
     }
 
-    // Verifica a senha atual
     const passwordMatch = await compare(currentPassword, user.password);
     if (!passwordMatch) {
-      throw new Error('Current password is incorrect');
+      throw new ValidationError('Senha atual incorreta');
     }
 
     // Atualiza a senha

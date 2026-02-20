@@ -1,6 +1,7 @@
 import prismaClient from "../../prisma";
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import { ValidationError } from '../../errors/AppError';
 
 interface AuthRequest {
   email: string;
@@ -14,20 +15,24 @@ class AuthUserService {
     });
 
     if (!user) {
-      throw new Error("Email/Password incorrect");
+      throw new ValidationError("Email ou senha incorretos");
     }
 
     const passwordMatch = await compare(password, user.password);
     if (!passwordMatch) {
-      throw new Error("Email/Password incorrect");
+      throw new ValidationError("Email ou senha incorretos");
     }
 
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new Error('JWT_SECRET não configurado');
+    }
     const token = sign(
       {
         name: user.name,
         email: user.email,
       },
-      "4f93ac9d10cb751b8c9c646bc9dbccb9", // Substitua por uma chave segura em variáveis de ambiente
+      secret,
       {
         subject: user.id,
         expiresIn: '30d'

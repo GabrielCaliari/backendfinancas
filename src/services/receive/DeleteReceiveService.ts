@@ -1,47 +1,47 @@
 import prismaClient from "../../prisma";
+import { NotFoundError } from "../../errors/AppError";
+import { requireOwnership } from "../../helpers/requireOwnership";
 
 interface ReceiveRequest {
   item_id: string;
   user_id: string;
 }
 
-class DeleteReceiveService{
-  async execute({ item_id, user_id }: ReceiveRequest){
+class DeleteReceiveService {
+  async execute({ item_id, user_id }: ReceiveRequest) {
+    await prismaClient.$transaction(async (tx) => {
+      const receive = await tx.receive.findUnique({
+        where: { id: item_id },
+      });
 
-    const receive = await prismaClient.receive.findFirst({
-      where:{
-        id: item_id
+      if (!receive) {
+        throw new NotFoundError("Movimentação não encontrada");
       }
-    })
 
-    await prismaClient.receive.delete({
-      where:{
-        id: item_id
-      }
-    })
+      requireOwnership(receive.user_id, user_id);
 
+      const user = await tx.user.findUnique({
+        where: { id: user_id },
+      });
+      if (!user) throw new NotFoundError("Usuário não encontrado");
 
-    const findUser = await prismaClient.user.findFirst({
-      where:{
-        id: user_id,
-      }
-    })
+      const newBalance =
+        receive.type === "despesa"
+          ? user.balance + receive.value
+          : user.balance - receive.value;
 
-    const valueUpdated = receive.type === 'despesa' ? findUser.balance += receive.value : findUser.balance -= receive.value;
+      await tx.receive.delete({
+        where: { id: item_id },
+      });
 
-    const updateUser = await prismaClient.user.update({
-      where:{
-        id: user_id,
-      },
-      data:{
-        balance: valueUpdated
-      }
-    })
+      await tx.user.update({
+        where: { id: user_id },
+        data: { balance: newBalance },
+      });
+    });
 
-    return { status: 'updated'}
-
-   
+    return { status: "updated" };
   }
 }
 
-export { DeleteReceiveService }
+export { DeleteReceiveService };

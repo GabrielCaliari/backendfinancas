@@ -38,10 +38,9 @@ app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
     console.error('Erro (cliente):', err.message);
   }
 
-  return res.status(statusCode).json({
-    error: message,
-    ...(statusCode === 500 && { message: 'Internal server error.' }),
-  });
+  return res.status(statusCode).json(
+    statusCode === 500 ? { error: 'Internal server error.' } : { error: message }
+  );
 });
 
 const PORT = process.env.PORT || 8080;

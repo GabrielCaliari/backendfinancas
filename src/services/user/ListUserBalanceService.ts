@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import { ValidationError, NotFoundError } from "../../errors/AppError";
 
 interface UserRequest {
   user_id: string;
@@ -17,7 +18,7 @@ interface ItemProp {
 class ListUserBalanceService {
   async execute({ user_id, date }: UserRequest) {
     if (!user_id) {
-      throw new Error("Invalid user");
+      throw new ValidationError("Usuário inválido");
     }
 
     const dashboard = [];
@@ -28,7 +29,7 @@ class ListUserBalanceService {
     });
 
     if (!findUser) {
-      throw new Error("User not found");
+      throw new NotFoundError("Usuário não encontrado");
     }
 
     const data = {

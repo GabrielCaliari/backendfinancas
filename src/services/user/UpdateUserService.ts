@@ -1,5 +1,6 @@
 import { hash } from 'bcryptjs';
 import prismaClient from '../../prisma';
+import { NotFoundError, ValidationError } from '../../errors/AppError';
 
 interface UserUpdateRequest {
   id: string;
@@ -16,7 +17,7 @@ class UpdateUserService {
     });
 
     if (!userExists) {
-      throw new Error('User not found');
+      throw new NotFoundError('Usuário não encontrado');
     }
 
     if (email) {
@@ -28,7 +29,7 @@ class UpdateUserService {
       });
 
       if (userWithEmail) {
-        throw new Error('Email already in use');
+        throw new ValidationError('Email já está em uso');
       }
     }
 

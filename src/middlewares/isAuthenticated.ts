@@ -19,10 +19,11 @@ export function isAuthenticated(
   const [, token] = authToken.split(" ");
 
   try{
-    const { sub } = verify(
-      token,
-      "4f93ac9d10cb751b8c9c646bc9dbccb9",
-    ) as Payload;
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      return response.status(500).end();
+    }
+    const { sub } = verify(token, secret) as Payload;
 
     request.user_id = sub;
 

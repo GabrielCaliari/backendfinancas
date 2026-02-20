@@ -1,5 +1,3 @@
-// src/controllers/receive/EditReceiveController.ts
-
 import { Request, Response } from 'express';
 import { EditReceiveService } from '../../services/receive/EditReceiveService';
 
@@ -7,26 +5,19 @@ class EditReceiveController {
   async handle(request: Request, response: Response) {
     const { id } = request.params;
     const { description, value, type, payment_method } = request.body;
+    const user_id = request.user_id!;
 
     const editReceiveService = new EditReceiveService();
+    const updatedReceive = await editReceiveService.execute({
+      id,
+      user_id,
+      description,
+      value,
+      type,
+      payment_method,
+    });
 
-    try {
-      const updatedReceive = await editReceiveService.execute({
-        id,
-        description,
-        value,
-        type,
-        payment_method,
-      });
-
-      return response.json(updatedReceive);
-    } catch (error) {
-      console.error("Erro ao editar recebimento:", error); // Log detalhado
-      return response.status(500).json({
-        error: 'Erro ao editar recebimento.',
-        details: error.message || error, // Enviar detalhes para o frontend
-      });
-    }
+    return response.json(updatedReceive);
   }
 }
 

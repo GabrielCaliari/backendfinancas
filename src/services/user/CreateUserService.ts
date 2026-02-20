@@ -1,18 +1,19 @@
 import { hash } from 'bcryptjs';
 import prismaClient from '../../prisma';
+import { ValidationError } from '../../errors/AppError';
 
 interface UserRequest {
   name: string;
   email: string;
   password: string;
   balance?: number;
-  avatarUrl?: string; // Novo campo
+  avatarUrl?: string;
 }
 
 class CreateUserService {
   async execute({ name, email, password, balance = 0, avatarUrl }: UserRequest) {
     if (!email) {
-      throw new Error('Email incorrect');
+      throw new ValidationError('Email inválido');
     }
 
     const userAlreadyExists = await prismaClient.user.findFirst({
@@ -20,7 +21,7 @@ class CreateUserService {
     });
 
     if (userAlreadyExists) {
-      throw new Error('User already exists');
+      throw new ValidationError('Usuário já existe com este email');
     }
 
     const passwordHash = await hash(password, 8);
