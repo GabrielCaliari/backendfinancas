@@ -1,8 +1,4 @@
-/**
- * Erros HTTP padronizados para respostas previsíveis.
- * 400 → validação | 401 → não autenticado | 403 → recurso não pertence ao usuário
- * 404 → não encontrado | 500 → erro inesperado (sem expor stack)
- */
+
 export class AppError extends Error {
   public readonly statusCode: number;
 

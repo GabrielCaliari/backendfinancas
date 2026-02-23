@@ -32,14 +32,14 @@ class CreateUserService {
         email,
         password: passwordHash,
         balance,
-        avatarUrl, // Inclui avatarUrl na criação
+        avatarUrl, 
       },
       select: {
         id: true,
         name: true,
         email: true,
         balance: true,
-        avatarUrl: true, // Seleciona avatarUrl para ser retornado
+        avatarUrl: true, 
         created_at: true,
         updated_at: true,
       },
